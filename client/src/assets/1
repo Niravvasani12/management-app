@@ -1,0 +1,39 @@
+user-management-mern/
+│
+├── server/                 # Backend (Node + Express + MongoDB)
+│   ├── config/
+│   │   └── db.js
+│   ├── controllers/
+│   │   ├── authController.js
+│   │   └── userController.js
+│   ├── middleware/
+│   │   └── authMiddleware.js
+│   ├── models/
+│   │   └── User.js
+│   ├── routes/
+│   │   ├── authRoutes.js
+│   │   └── userRoutes.js
+│   ├── .env
+│   ├── server.js
+│   └── package.json
+│
+├── client/                 # Frontend (React + Ant Design)
+│   ├── src/
+│   │   ├── api/
+│   │   │   └── axios.js
+│   │   ├── pages/
+│   │   │   ├── Admin/
+│   │   │   │   ├── AdminLogin.jsx
+│   │   │   │   └── AdminDashboard.jsx
+│   │   │   ├── User/
+│   │   │   │   ├── Login.jsx
+│   │   │   │   ├── Register.jsx
+│   │   │   │   └── Dashboard.jsx
+│   │   ├── components/
+│   │   ├── routes/
+│   │   │   └── ProtectedRoute.jsx
+│   │   ├── App.jsx
+│   │   └── main.jsx
+│   ├── package.json
+│
+└── README.md
