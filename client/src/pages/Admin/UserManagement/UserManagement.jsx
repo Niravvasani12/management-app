@@ -27,9 +27,9 @@ const UserManagement = () => {
   const [selectedUser, setSelectedUser] = useState(null);
 
   const [form] = Form.useForm();
-
   const navigate = useNavigate();
 
+  // ✅ FETCH USERS
   const fetchUsers = async () => {
     try {
       setLoading(true);
@@ -42,8 +42,15 @@ const UserManagement = () => {
     }
   };
 
+  // ✅ AUTO REFRESH (POLLING)
   useEffect(() => {
     fetchUsers();
+
+    const interval = setInterval(() => {
+      fetchUsers();
+    }, 5000); // every 5 sec
+
+    return () => clearInterval(interval);
   }, []);
 
   // ✅ OPEN EDIT MODAL
@@ -67,17 +74,20 @@ const UserManagement = () => {
 
       message.success("User Updated Successfully");
       setIsModalOpen(false);
-      fetchUsers();
+
+      fetchUsers(); // instant refresh
     } catch {
       message.error("Update failed");
     }
   };
 
+  // ✅ DELETE USER
   const handleDelete = async (id) => {
     try {
       await API.delete(`/users/delete/${id}`);
       message.success("User Deleted");
-      fetchUsers();
+
+      fetchUsers(); // instant refresh
     } catch {
       message.error("Error deleting user");
     }
@@ -88,17 +98,13 @@ const UserManagement = () => {
     { title: "User Name", dataIndex: "name" },
     { title: "Mobile Number", dataIndex: "mobile" },
     { title: "Email", dataIndex: "email" },
-    {
-      title: "Status",
-      dataIndex: "status",
-    },
+    { title: "Status", dataIndex: "status" },
     {
       title: "Last Updated",
       render: (_, record) => new Date(record.updatedAt).toLocaleDateString(),
     },
   ];
 
-  // ✅ EDIT ACTION COLUMN (NO BLOCK BUTTON)
   const actionColumn = {
     title: "Action",
     render: (_, record) => (
@@ -169,7 +175,7 @@ const UserManagement = () => {
     },
     {
       key: "3",
-      label: "Pending Staff",
+      label: "Pending Users",
       children: (
         <Table
           columns={[...baseColumns, actionColumn]}

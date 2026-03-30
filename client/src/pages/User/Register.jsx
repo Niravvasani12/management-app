@@ -65,13 +65,19 @@ const Register = () => {
               <Input placeholder="Enter name" autoFocus />
             </Form.Item>
 
-            {/* 🔥 EMAIL */}
+            {/*  EMAIL */}
             <Form.Item
               label="Email"
               name="email"
               rules={[
                 { required: true, message: "Please enter email" },
                 { type: "email", message: "Enter valid email" },
+
+                //  CUSTOM PATTERN VALIDATION
+                {
+                  pattern: /^[a-zA-Z0-9._%+-]+@gmail\.com$/,
+                  message: "Only Gmail addresses are allowed",
+                },
               ]}
             >
               <Input placeholder="Enter email" />
