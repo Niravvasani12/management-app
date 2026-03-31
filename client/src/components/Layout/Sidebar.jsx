@@ -15,7 +15,6 @@ const Sidebar = ({ selectedKey, setSelectedKey }) => {
 
   return (
     <div style={{ position: "relative" }}>
-      {/* 🔥 FLOATING BUTTON */}
       <div
         onClick={() => setCollapsed(!collapsed)}
         style={{
@@ -26,7 +25,7 @@ const Sidebar = ({ selectedKey, setSelectedKey }) => {
           width: 40,
           height: 40,
           borderRadius: "50%",
-          background: "#8eb3b4",
+          background: "#82a4a5",
           display: "flex",
           alignItems: "center",
           justifyContent: "center",
