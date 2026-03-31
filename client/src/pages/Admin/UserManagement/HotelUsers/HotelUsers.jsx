@@ -1,102 +1,231 @@
-import React, { useEffect, useState } from "react";
-import { Table, Button, message, Popconfirm } from "antd";
+import React, { useEffect, useState, useMemo } from "react";
+import {
+  Table,
+  Button,
+  message,
+  Popconfirm,
+  Modal,
+  Form,
+  Input,
+  Space,
+  Select,
+} from "antd";
+import { EditOutlined } from "@ant-design/icons";
 import API from "../../../../api/axios";
 
-const HotelUsers = () => {
+const HotelUsers = ({ searchText }) => {
+  //** receive searchText
   const [data, setData] = useState([]);
   const [loading, setLoading] = useState(false);
 
+  const [isCreateModalOpen, setIsCreateModalOpen] = useState(false);
+  const [isEditModalOpen, setIsEditModalOpen] = useState(false);
+
+  const [selectedUser, setSelectedUser] = useState(null);
+
+  const [form] = Form.useForm();
+  const [editForm] = Form.useForm();
+
+  //** FETCH USERS
   const fetchUsers = async () => {
     try {
       setLoading(true);
       const res = await API.get("/users");
+
       const filtered = res.data.filter(
         (u) => u.role === "hotel" && u.status === "verified",
       );
+
       setData(filtered);
-      // eslint-disable-next-line no-unused-vars
-    } catch (err) {
+    } catch {
       message.error("Failed to fetch users");
     } finally {
       setLoading(false);
     }
   };
 
+  //** AUTO REFRESH
   useEffect(() => {
     fetchUsers();
+    const interval = setInterval(fetchUsers, 5000);
+    return () => clearInterval(interval);
   }, []);
 
-  const handleBlock = async (id) => {
+  //** SEARCH FILTER (OPTIMIZED)
+  const filteredData = useMemo(() => {
+    if (!searchText) return data;
+
+    const value = searchText.toLowerCase().trim();
+
+    return data.filter((user) => {
+      return (
+        user.name?.toLowerCase().includes(value) ||
+        user.email?.toLowerCase().includes(value) ||
+        user.mobile?.toLowerCase().includes(value)
+      );
+    });
+  }, [data, searchText]);
+
+  //** CREATE USER
+  const handleCreate = async () => {
     try {
-      await API.put(`/users/block/${id}`);
-      message.success("User Blocked");
+      const values = await form.validateFields();
+
+      await API.post("/users/create-hotel", values);
+
+      message.success("Hotel User Created Successfully");
+
+      setIsCreateModalOpen(false);
+      form.resetFields();
       fetchUsers();
-      // eslint-disable-next-line no-unused-vars
-    } catch (err) {
-      message.error("Error blocking user");
+    } catch {
+      message.error("Error creating user");
     }
   };
 
+  //** OPEN EDIT MODAL
+  const openEditModal = (user) => {
+    setSelectedUser(user);
+
+    editForm.setFieldsValue({
+      name: user.name,
+      mobile: user.mobile,
+      password: "",
+      status: user.status,
+    });
+
+    setIsEditModalOpen(true);
+  };
+
+  //** UPDATE USER
+  const handleUpdate = async () => {
+    try {
+      const values = await editForm.validateFields();
+
+      await API.put(`/users/update/${selectedUser._id}`, values);
+
+      message.success("User Updated Successfully");
+
+      setIsEditModalOpen(false);
+      fetchUsers();
+    } catch {
+      message.error("Update failed");
+    }
+  };
+
+  //** DELETE USER
   const handleDelete = async (id) => {
     try {
       await API.delete(`/users/delete/${id}`);
       message.success("User Deleted Successfully");
       fetchUsers();
-      // eslint-disable-next-line no-unused-vars
-    } catch (err) {
+    } catch {
       message.error("Error deleting user");
     }
   };
 
+  //** TABLE COLUMNS
   const columns = [
+    { title: "ID", render: (_, __, index) => index + 1 },
     { title: "Name", dataIndex: "name" },
     { title: "Email", dataIndex: "email" },
     { title: "Mobile", dataIndex: "mobile" },
     {
-      title: "Role",
-      dataIndex: "role",
-      render: () => "Hotel",
-    },
-    {
       title: "Status",
       dataIndex: "status",
-      render: () => "Verified",
+    },
+    {
+      title: "Last Updated",
+      render: (_, record) => new Date(record.updatedAt).toLocaleDateString(),
     },
     {
       title: "Action",
       render: (_, record) => (
-        <>
-          <Button
-            danger
-            style={{ marginRight: 10 }}
-            onClick={() => handleBlock(record._id)}
-          >
-            Block
+        <Space>
+          <Button icon={<EditOutlined />} onClick={() => openEditModal(record)}>
+            Edit
           </Button>
 
           <Popconfirm
-            title="Are you sure to delete this user?"
+            title="Delete user?"
             onConfirm={() => handleDelete(record._id)}
-            okText="Yes"
-            cancelText="No"
           >
-            <Button type="primary" danger>
-              Delete
-            </Button>
+            <Button danger>Delete</Button>
           </Popconfirm>
-        </>
+        </Space>
       ),
     },
   ];
 
   return (
-    <Table
-      columns={columns}
-      dataSource={data}
-      rowKey="_id"
-      loading={loading}
-      pagination={{ pageSize: 5 }}
-    />
+    <div>
+      {/*** TABLE */}
+      <Table
+        columns={columns}
+        dataSource={filteredData} //** use filtered data
+        rowKey="_id"
+        loading={loading}
+      />
+
+      {/*** CREATE MODAL */}
+      <Modal
+        title="Create Hotel User"
+        open={isCreateModalOpen}
+        onOk={handleCreate}
+        onCancel={() => setIsCreateModalOpen(false)}
+      >
+        <Form form={form} layout="vertical">
+          <Form.Item name="name" label="Name" rules={[{ required: true }]}>
+            <Input />
+          </Form.Item>
+
+          <Form.Item name="email" label="Email" rules={[{ required: true }]}>
+            <Input />
+          </Form.Item>
+
+          <Form.Item
+            name="password"
+            label="Password"
+            rules={[{ required: true }]}
+          >
+            <Input.Password />
+          </Form.Item>
+
+          <Form.Item name="mobile" label="Mobile">
+            <Input />
+          </Form.Item>
+        </Form>
+      </Modal>
+
+      {/*** EDIT MODAL */}
+      <Modal
+        title="Edit User"
+        open={isEditModalOpen}
+        onOk={handleUpdate}
+        onCancel={() => setIsEditModalOpen(false)}
+      >
+        <Form form={editForm} layout="vertical">
+          <Form.Item name="name" label="Name" rules={[{ required: true }]}>
+            <Input />
+          </Form.Item>
+
+          <Form.Item name="mobile" label="Mobile" rules={[{ required: true }]}>
+            <Input />
+          </Form.Item>
+
+          <Form.Item name="password" label="Password">
+            <Input.Password placeholder="Leave blank to keep same" />
+          </Form.Item>
+
+          <Form.Item name="status" label="Status" rules={[{ required: true }]}>
+            <Select>
+              <Select.Option value="verified">Active</Select.Option>
+              <Select.Option value="blocked">Blocked</Select.Option>
+            </Select>
+          </Form.Item>
+        </Form>
+      </Modal>
+    </div>
   );
 };
 

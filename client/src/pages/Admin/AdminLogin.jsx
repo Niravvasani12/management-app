@@ -1,6 +1,8 @@
 import React from "react";
-import { Form, Input, Button, Card, message, Divider } from "antd";
-import { useNavigate } from "react-router-dom";
+import { Form, Input, Button, Card, message, Typography, Divider } from "antd";
+import { useNavigate, Link } from "react-router-dom";
+
+const { Title, Text } = Typography;
 
 const AdminLogin = () => {
   const navigate = useNavigate();
@@ -10,7 +12,7 @@ const AdminLogin = () => {
 
     if (email === "adminAavgo@gmail.com" && password === "admin123") {
       localStorage.setItem("admin", JSON.stringify({ email }));
-      message.success("Login Successful");
+      message.success("Login Successful , Admin");
       navigate("/admin/dashboard");
     } else {
       message.error("Invalid Credentials");
@@ -18,54 +20,73 @@ const AdminLogin = () => {
   };
 
   return (
-    <div
-      style={{
-        height: "100vh",
-        display: "flex",
-        justifyContent: "center",
-        alignItems: "center",
-        background: "#f0f2f5",
-      }}
-    >
-      <Card title="Admin Login" style={{ width: 350 }}>
-        <Form layout="vertical" onFinish={onFinish}>
-          <Form.Item label="Email" name="email" rules={[{ required: true }]}>
-            <Input />
-          </Form.Item>
+    <div style={{ display: "flex", height: "100vh" }}>
+      <div
+        style={{
+          flex: 1,
+          background: "#e7ecf4",
+          display: "flex",
+          justifyContent: "center",
+          alignItems: "center",
+          flexDirection: "column",
+        }}
+      >
+        <Title style={{ marginBottom: 0 }}>Admin Panel</Title>
+        <Text>Manage your system securely</Text>
+      </div>
 
-          <Form.Item
-            label="Password"
-            name="password"
-            rules={[{ required: true }]}
-          >
-            <Input.Password />
-          </Form.Item>
+      {/* RIGHT SIDE */}
+      <div
+        style={{
+          flex: 1,
+          display: "flex",
+          justifyContent: "center",
+          alignItems: "center",
+          background: "#f0f2f5",
+        }}
+      >
+        <Card title="Admin Login" style={{ width: 400, borderRadius: 10 }}>
+          <Form layout="vertical" onFinish={onFinish}>
+            <Form.Item
+              label="Email"
+              name="email"
+              rules={[
+                { required: true, message: "Email is required" },
+                { type: "email", message: "Enter valid email" },
+              ]}
+            >
+              <Input placeholder="Enter admin email" autoFocus />
+            </Form.Item>
 
-          <Button type="primary" htmlType="submit" block>
-            Login
-          </Button>
-        </Form>
+            <Form.Item
+              label="Password"
+              name="password"
+              rules={[{ required: true, message: "Password is required" }]}
+            >
+              <Input.Password placeholder="Enter password" />
+            </Form.Item>
 
-        {/* 🔥 Divider */}
-        <Divider>OR</Divider>
+            <Button type="primary" htmlType="submit" block>
+              Login
+            </Button>
+          </Form>
 
-        {/* 👤 User Portal Links */}
-        <div style={{ textAlign: "center" }}>
-          <p style={{ marginBottom: 10 }}>Want to use User Portal?</p>
+          {/*Switch to User Portal */}
+          <Divider>OR</Divider>
 
-          <Button
-            type="default"
-            style={{ marginRight: 10 }}
-            onClick={() => navigate("/login")}
-          >
-            User Login
-          </Button>
+          <div style={{ textAlign: "center" }}>
+            <Text>Not an admin?</Text>
+            <br />
+            <Button type="link" onClick={() => navigate("/login")}>
+              Go to User Login
+            </Button>
 
-          <Button type="link" onClick={() => navigate("/register")}>
-            Register
-          </Button>
-        </div>
-      </Card>
+            <br />
+
+            <Link to="/register">Create User Account</Link>
+          </div>
+        </Card>
+      </div>
     </div>
   );
 };

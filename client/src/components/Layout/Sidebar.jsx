@@ -35,7 +35,6 @@ const Sidebar = ({ selectedKey, setSelectedKey }) => {
           boxShadow: "0 2px 8px rgba(0,0,0,0.3)",
         }}
       >
-        {/* {collapsed ? <MenuUnfoldOutlined /> : <MenuFoldOutlined />} */}
         {collapsed ? <ArrowRightOutlined /> : <ArrowLeftOutlined />}
       </div>
 
@@ -44,7 +43,7 @@ const Sidebar = ({ selectedKey, setSelectedKey }) => {
         collapsed={collapsed}
         collapsedWidth={80}
         trigger={null}
-        style={{ background: "#0f172a", minHeight: "100vh" }}
+        style={{ background: "#081228fc", minHeight: "100vh" }}
       >
         {/* LOGO */}
         <div

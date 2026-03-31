@@ -15,7 +15,7 @@ const Register = () => {
 
       const res = await API.post("/auth/register", values);
 
-      message.success(res.data.message || "Registration Successful 🎉");
+      message.success(res.data.message || "Registration Successful ");
 
       setTimeout(() => {
         navigate("/login");
@@ -56,7 +56,7 @@ const Register = () => {
       >
         <Card title="User Register" style={{ width: 400, borderRadius: 10 }}>
           <Form layout="vertical" onFinish={onFinish}>
-            {/* 🔥 NAME */}
+            {/* NAME */}
             <Form.Item
               label="Name"
               name="name"
@@ -83,7 +83,7 @@ const Register = () => {
               <Input placeholder="Enter email" />
             </Form.Item>
 
-            {/* 🔥 MOBILE NUMBER (NEW) */}
+            {/* MOBILE NUMBER (NEW) */}
             <Form.Item
               label="Mobile Number"
               name="mobile"
@@ -98,7 +98,7 @@ const Register = () => {
               <Input placeholder="Enter mobile number" maxLength={10} />
             </Form.Item>
 
-            {/* 🔥 PASSWORD */}
+            {/* PASSWORD */}
             <Form.Item
               label="Password"
               name="password"

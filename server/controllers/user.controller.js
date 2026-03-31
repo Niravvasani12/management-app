@@ -28,7 +28,7 @@ export const approveUser = async (req, res) => {
       {
         status: "verified",
         role,
-        isApprovedNotified: false, // 🔥 NEW FIELD
+        isApprovedNotified: false, //  NEW FIELD
       },
       { new: true },
     );

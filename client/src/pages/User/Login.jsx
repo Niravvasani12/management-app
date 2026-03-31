@@ -17,7 +17,7 @@ const Login = () => {
 
       const token = res.data?.token;
       const user = res.data?.user;
-      const approvalMessage = res.data?.approvalMessage; // ✅ NEW
+      const approvalMessage = res.data?.approvalMessage; //  NEW
 
       if (!token || !user || !user._id) {
         message.error("Invalid login response from server");
@@ -27,11 +27,11 @@ const Login = () => {
       localStorage.setItem("token", token);
       localStorage.setItem("user", JSON.stringify(user));
 
-      // ✅ SHOW APPROVAL MESSAGE IF EXISTS
+      //  SHOW APPROVAL MESSAGE IF EXISTS
       if (approvalMessage) {
-        message.success(approvalMessage); // 🎉 Admin approved your account!
+        message.success(approvalMessage); //  Admin approved your account!
       } else {
-        message.success("Login Successful 🚀");
+        message.success(`Login Successful ${user?.name}`);
       }
 
       if (user.role === "admin") {

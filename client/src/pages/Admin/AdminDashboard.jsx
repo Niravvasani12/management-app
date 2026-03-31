@@ -20,7 +20,7 @@ const AdminDashboard = () => {
 
   return (
     <Layout style={{ minHeight: "100vh" }}>
-      {/* ✅ Sidebar Component */}
+      {/* Sidebar Component */}
       <Sidebar selectedKey={selectedKey} setSelectedKey={setSelectedKey} />
 
       <Layout>
@@ -32,7 +32,7 @@ const AdminDashboard = () => {
             padding: "0 20px",
           }}
         >
-          <h3>Welcome to Management Portal</h3>
+          {/* <h3>Welcome to Management Portal</h3> */}
           <Navbar />
         </Header>
 

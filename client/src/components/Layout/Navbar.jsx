@@ -26,10 +26,11 @@ const Navbar = () => {
 
       {/* RIGHT */}
       <div style={{ display: "flex", alignItems: "center", gap: 15 }}>
+        {" "}
+        <h3>Welcome to Management Portal</h3>
         <div style={{ textAlign: "right" }}>
           <div style={{ fontSize: 12, color: "#888" }}>ADMIN</div>
         </div>
-
         <Button danger onClick={logout}>
           Logout
         </Button>

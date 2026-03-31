@@ -19,7 +19,7 @@ export const registerUser = async (req, res) => {
       password: hashedPassword,
       role: "master",
       status: "pending",
-      isApprovedNotified: false, // ✅ FIXED
+      isApprovedNotified: false, //  FIXED
     });
 
     res.status(201).json({
@@ -35,19 +35,19 @@ export const loginUser = async (req, res) => {
   try {
     const { email, password } = req.body;
 
-    // 🔍 CHECK USER
+    //  CHECK USER
     const user = await User.findOne({ email });
     if (!user) {
       return res.status(400).json({ message: "User not found" });
     }
 
-    // 🔐 CHECK PASSWORD
+    //  CHECK PASSWORD
     const isMatch = await bcrypt.compare(password, user.password);
     if (!isMatch) {
       return res.status(400).json({ message: "Invalid password" });
     }
 
-    // 🚫 STATUS CHECK
+    //  STATUS CHECK
     if (user.status === "pending") {
       return res.status(403).json({
         message: "Wait for admin approval",
@@ -60,7 +60,7 @@ export const loginUser = async (req, res) => {
       });
     }
 
-    // 🔥 APPROVAL MESSAGE LOGIC
+    //  APPROVAL MESSAGE LOGIC
     let approvalMessage = null;
 
     if (user.isApprovedNotified === false) {
@@ -69,12 +69,12 @@ export const loginUser = async (req, res) => {
       await user.save();
     }
 
-    // 🔑 TOKEN
+    //  TOKEN
     const token = jwt.sign({ id: user._id }, process.env.JWT_SECRET, {
       expiresIn: "1d",
     });
 
-    // ✅ CLEAN USER DATA
+    //  CLEAN USER DATA
     const userData = {
       _id: user._id,
       name: user.name,
@@ -83,7 +83,7 @@ export const loginUser = async (req, res) => {
       status: user.status,
     };
 
-    // ✅ FINAL RESPONSE
+    //  FINAL RESPONSE
     res.status(200).json({
       message: "Login successful",
       approvalMessage,
@@ -106,7 +106,7 @@ export const approveUser = async (req, res) => {
       {
         status: "verified",
         role: role || "hotel",
-        isApprovedNotified: false, // ✅ TRIGGER MESSAGE
+        isApprovedNotified: false, //  TRIGGER MESSAGE
       },
       { new: true },
     );

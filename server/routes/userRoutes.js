@@ -124,4 +124,31 @@ router.get("/:id", async (req, res) => {
   }
 });
 
+// ================== UNBLOCK USER ==================
+router.put("/unblock/:id", async (req, res) => {
+  try {
+    const { role } = req.body;
+
+    const updatedUser = await User.findByIdAndUpdate(
+      req.params.id,
+      {
+        status: "verified",
+        role: role, // 👈 role update bhi
+      },
+      { new: true },
+    );
+
+    if (!updatedUser) {
+      return res.status(404).json({ message: "User not found" });
+    }
+
+    res.json({
+      message: "User unblocked successfully",
+      user: updatedUser,
+    });
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+});
+
 export default router;

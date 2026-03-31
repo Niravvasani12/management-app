@@ -3,38 +3,65 @@ import dotenv from "dotenv";
 import cors from "cors";
 import connectDB from "./config/db.js";
 
-// ✅ Routes
+// 🔥 NEW IMPORTS
+import http from "http";
+import { Server } from "socket.io";
+
+//  Routes
 import authRoutes from "./routes/authRoutes.js";
 import userRoutes from "./routes/userRoutes.js";
 
-// 🔐 Load env variables
+//  Load env variables
 dotenv.config();
 
-// 🔌 Connect to MongoDB
+//  Connect to MongoDB
 connectDB();
 
 const app = express();
 
-// ✅ Middleware
+//  CREATE HTTP SERVER
+const server = http.createServer(app);
+
+//  SOCKET.IO SETUP
+const io = new Server(server, {
+  cors: {
+    origin: "*",
+  },
+});
+
+//  MAKE IO GLOBAL (VERY IMPORTANT)
+global.io = io;
+
+//  SOCKET CONNECTION
+io.on("connection", (socket) => {
+  console.log("User connected:", socket.id);
+
+  socket.on("disconnect", () => {
+    console.log("User disconnected:", socket.id);
+  });
+});
+
+//  Middleware
 app.use(cors());
 app.use(express.json());
 
-// ✅ API Routes
+//  API Routes
 app.use("/api/auth", authRoutes);
 app.use("/api/users", userRoutes);
 
-// ✅ Test Route
+//  Test Route
 app.get("/", (req, res) => {
   res.send("🚀 API Running...");
 });
 
+//  404
 app.use((req, res) => {
   res.status(404).json({ message: "Route Not Found" });
 });
 
-// 🚀 Start Server
+//  Start Server (IMPORTANT CHANGE)
 const PORT = process.env.PORT || 5000;
 
-app.listen(PORT, () => {
+server.listen(PORT, () => {
   console.log(`Server running on port ${PORT}`);
 });

@@ -15,7 +15,7 @@ const CreateMasterUser = () => {
 
       message.success("Master User Created Successfully");
 
-      navigate("/admin/dashboard"); // ✅ FIXED
+      navigate("/admin/dashboard"); // ** FIXED
       // eslint-disable-next-line no-unused-vars
     } catch (err) {
       message.error("Error creating user");

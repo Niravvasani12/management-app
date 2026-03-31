@@ -15,7 +15,7 @@ const CreateHotelUser = () => {
 
       message.success("Hotel User Created Successfully");
 
-      navigate("/admin/dashboard"); // ✅ FIXED
+      navigate("/admin/dashboard");
     } catch (err) {
       message.error(err.response?.data?.message || "Error creating user");
     } finally {
