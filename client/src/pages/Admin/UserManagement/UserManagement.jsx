@@ -50,6 +50,7 @@ const UserManagement = () => {
           {(activeTab === "1" || activeTab === "2") && (
             <Button
               type="primary"
+              style={{ color: "black", background: "#e7ecf4" }}
               icon={<UserAddOutlined />}
               onClick={() =>
                 navigate(

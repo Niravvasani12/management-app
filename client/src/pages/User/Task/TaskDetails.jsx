@@ -21,7 +21,7 @@ const TaskDetails = ({ task, onClose, refresh }) => {
         {task.deadline ? new Date(task.deadline).toLocaleDateString() : "N/A"}
       </p>
 
-      {/* ✅ Update Status Component */}
+      {/*  Update Status Component */}
       <UpdateTaskStatus task={task} refresh={refresh} />
     </Modal>
   );

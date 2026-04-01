@@ -24,7 +24,7 @@ const AdminLogin = () => {
 
       //  FORCE NAVIGATION (no mistake now)
       if (user.role === "admin") {
-        message.success("Welcome Admin 🚀");
+        message.success("Welcome Admin ");
 
         //  IMPORTANT (delay fix for navigation issue)
         setTimeout(() => {
