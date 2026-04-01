@@ -3,14 +3,14 @@ import dotenv from "dotenv";
 import cors from "cors";
 import connectDB from "./config/db.js";
 
-// 🔥 NEW IMPORTS
+//  NEW IMPORTS
 import http from "http";
 import { Server } from "socket.io";
 
 //  Routes
 import authRoutes from "./routes/authRoutes.js";
 import userRoutes from "./routes/userRoutes.js";
-
+import taskRoutes from "./routes/taskRoutes.js";
 //  Load env variables
 dotenv.config();
 
@@ -48,10 +48,11 @@ app.use(express.json());
 //  API Routes
 app.use("/api/auth", authRoutes);
 app.use("/api/users", userRoutes);
+app.use("/api/tasks", taskRoutes);
 
 //  Test Route
 app.get("/", (req, res) => {
-  res.send("🚀 API Running...");
+  res.send(" API Running...");
 });
 
 //  404

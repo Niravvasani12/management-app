@@ -3,10 +3,20 @@ import User from "../models/User.js";
 // ================== GET ALL USERS ==================
 export const getAllUsers = async (req, res) => {
   try {
+    console.log("✅ GET USERS CALLED");
+
+    // 🔥 REMOVE FILTER (IMPORTANT FIX)
     const users = await User.find().sort({ createdAt: -1 });
-    res.json(users);
+
+    console.log("USERS FOUND:", users.length);
+
+    res.status(200).json(users);
   } catch (error) {
-    res.status(500).json({ message: "Error fetching users" });
+    console.error("❌ GET USERS ERROR:", error);
+    res.status(500).json({
+      message: "Error fetching users",
+      error: error.message,
+    });
   }
 };
 
@@ -26,9 +36,8 @@ export const approveUser = async (req, res) => {
     const user = await User.findByIdAndUpdate(
       req.params.id,
       {
-        status: "verified",
+        status: "verified", // ✅ correct
         role,
-        isApprovedNotified: false, //  NEW FIELD
       },
       { new: true },
     );
@@ -42,9 +51,11 @@ export const approveUser = async (req, res) => {
       user,
     });
   } catch (error) {
+    console.error("❌ APPROVE ERROR:", error);
     res.status(500).json({ message: "Error approving user" });
   }
 };
+
 // ================== BLOCK USER ==================
 export const blockUser = async (req, res) => {
   try {
@@ -63,6 +74,7 @@ export const blockUser = async (req, res) => {
       user,
     });
   } catch (error) {
+    console.error(error);
     res.status(500).json({ message: "Error blocking user" });
   }
 };
@@ -78,6 +90,7 @@ export const deleteUser = async (req, res) => {
 
     res.json({ message: "User deleted successfully" });
   } catch (error) {
+    console.error(error);
     res.status(500).json({ message: "Error deleting user" });
   }
 };

@@ -1,15 +1,22 @@
 import React from "react";
 import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 
-// User Pages
+// ================= USER PAGES =================
 import Login from "./pages/User/Login";
 import Register from "./pages/User/Register";
 import Dashboard from "./pages/User/Dashboard";
-import CreateMasterUser from "./pages/Admin/UserManagement/MasterUsers/CreateMasterUser";
-import CreateHotelUser from "./pages/Admin/UserManagement/HotelUsers/CreateHotelUser"; // optional
-// Admin Pages
+
+//  NEW (Task Module)
+import MyTasks from "./pages/User/Task/MyTasks";
+
+// ================= ADMIN PAGES =================
 import AdminLogin from "./pages/Admin/AdminLogin";
 import AdminDashboard from "./pages/Admin/AdminDashboard";
+
+import CreateMasterUser from "./pages/Admin/UserManagement/MasterUsers/CreateMasterUser";
+import CreateHotelUser from "./pages/Admin/UserManagement/HotelUsers/CreateHotelUser";
+
+// ================= ROUTE GUARDS =================
 
 const UserPrivateRoute = ({ children }) => {
   const token = localStorage.getItem("token");
@@ -36,14 +43,17 @@ const PublicRoute = ({ children, type }) => {
   return children;
 };
 
+// ================= MAIN APP =================
+
 function App() {
   return (
     <BrowserRouter>
       <Routes>
-        {/* Default Redirect */}
+        {/* ================= DEFAULT ================= */}
         <Route path="/" element={<Navigate to="/login" />} />
 
         {/* ================= USER ROUTES ================= */}
+
         <Route
           path="/login"
           element={
@@ -71,6 +81,16 @@ function App() {
           }
         />
 
+        {/*  NEW TASK ROUTE */}
+        <Route
+          path="/user/tasks"
+          element={
+            <UserPrivateRoute>
+              <MyTasks />
+            </UserPrivateRoute>
+          }
+        />
+
         {/* ================= ADMIN ROUTES ================= */}
 
         <Route path="/admin" element={<Navigate to="/admin/login" />} />
@@ -92,15 +112,8 @@ function App() {
             </AdminPrivateRoute>
           }
         />
-        {/* <Route
-          path="/admin/user-management"
-          element={
-            <AdminPrivateRoute>
-              < />
-            </AdminPrivateRoute>
-          }
-        /> */}
-        {/* 🔥 NEW ROUTES */}
+
+        {/*  CREATE USERS */}
         <Route
           path="/admin/create-master"
           element={
@@ -118,6 +131,7 @@ function App() {
             </AdminPrivateRoute>
           }
         />
+
         {/* ================= 404 ================= */}
         <Route path="*" element={<h1>404 Page Not Found</h1>} />
       </Routes>

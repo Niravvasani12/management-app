@@ -1,11 +1,11 @@
 import React, { useState } from "react";
 import { Layout, Menu } from "antd";
 import {
-  UserOutlined,
   DashboardOutlined,
   LogoutOutlined,
   ArrowLeftOutlined,
   ArrowRightOutlined,
+  UnorderedListOutlined,
 } from "@ant-design/icons";
 import { useNavigate } from "react-router-dom";
 
@@ -15,21 +15,21 @@ const UserSidebar = ({ selectedKey, setSelectedKey }) => {
   const [collapsed, setCollapsed] = useState(false);
   const navigate = useNavigate();
 
-  //  HANDLE MENU CLICK
+  // ✅ FIXED MENU CLICK
   const handleMenuClick = (e) => {
-    setSelectedKey(e.key);
-
-    if (e.key === "dashboard") navigate("/dashboard");
-    // if (e.key === "profile") navigate("/profile");
     if (e.key === "logout") {
       localStorage.clear();
       navigate("/login");
+      return;
     }
+
+    // ✅ ONLY CHANGE STATE (NO NAVIGATE)
+    setSelectedKey(e.key);
   };
 
   return (
     <div style={{ position: "relative" }}>
-      {/* FLOAT BUTTON */}
+      {/* TOGGLE BUTTON */}
       <div
         onClick={() => setCollapsed(!collapsed)}
         style={{
@@ -83,11 +83,11 @@ const UserSidebar = ({ selectedKey, setSelectedKey }) => {
               icon: <DashboardOutlined />,
               label: "Dashboard",
             },
-            // {
-            //   key: "profile",
-            //   icon: <UserOutlined />,
-            //   label: "Profile",
-            // },
+            {
+              key: "tasks",
+              icon: <UnorderedListOutlined />,
+              label: "My Tasks",
+            },
             {
               key: "logout",
               icon: <LogoutOutlined />,

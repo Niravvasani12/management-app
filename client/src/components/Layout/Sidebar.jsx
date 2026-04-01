@@ -3,7 +3,7 @@ import { Layout, Menu } from "antd";
 import {
   UserOutlined,
   SettingOutlined,
-  // DashboardOutlined,
+  UnorderedListOutlined,
   ArrowLeftOutlined,
   ArrowRightOutlined,
 } from "@ant-design/icons";
@@ -15,6 +15,7 @@ const Sidebar = ({ selectedKey, setSelectedKey }) => {
 
   return (
     <div style={{ position: "relative" }}>
+      {/* Toggle Button */}
       <div
         onClick={() => setCollapsed(!collapsed)}
         style={{
@@ -62,15 +63,15 @@ const Sidebar = ({ selectedKey, setSelectedKey }) => {
           selectedKeys={[selectedKey]}
           onClick={(e) => setSelectedKey(e.key)}
           items={[
-            // {
-            //   key: "dashboard",
-            //   icon: <DashboardOutlined />,
-            //   label: "Dashboard",
-            // },
             {
               key: "users",
               icon: <UserOutlined />,
               label: "User Management",
+            },
+            {
+              key: "tasks", // ✅ FIXED
+              icon: <UnorderedListOutlined />,
+              label: "Task Management",
             },
             {
               key: "settings",

@@ -12,7 +12,7 @@ const userSchema = new mongoose.Schema(
 
     role: {
       type: String,
-      enum: ["master", "hotel"],
+      enum: ["admin", "master", "hotel"],
       default: "master",
     },
 
@@ -22,7 +22,10 @@ const userSchema = new mongoose.Schema(
       default: "pending",
     },
 
-    mobile: String,
+    mobile: {
+      type: String,
+      required: true,
+    },
   },
   { timestamps: true },
 );

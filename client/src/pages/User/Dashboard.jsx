@@ -3,17 +3,16 @@ import { Layout, Button, Card, message } from "antd";
 import { useNavigate } from "react-router-dom";
 import { io } from "socket.io-client";
 
-import UserSidebar from "../../components/Layout/UserSidebar"; // ✅ IMPORT SIDEBAR
-const { Header, Content } = Layout;
+import UserSidebar from "../../components/Layout/UserSidebar";
+import MyTasks from "./Task/MyTasks";
 
-// ✅ SOCKET CONNECT
-const socket = io("http://localhost:5000");
+const { Header, Content } = Layout;
 
 const Dashboard = () => {
   const navigate = useNavigate();
 
   const [user, setUser] = useState(null);
-  const [selectedKey, setSelectedKey] = useState("dashboard"); //  SIDEBAR STATE
+  const [selectedKey, setSelectedKey] = useState("dashboard");
 
   useEffect(() => {
     const storedUser = JSON.parse(localStorage.getItem("user"));
@@ -26,29 +25,27 @@ const Dashboard = () => {
     // eslint-disable-next-line react-hooks/set-state-in-effect
     setUser(storedUser);
 
-    //  LISTEN FOR DELETE EVENT
+    // ✅ SOCKET INSIDE EFFECT
+    const socket = io("http://localhost:5000");
+
     socket.on("userDeleted", (userId) => {
       if (userId === storedUser._id) {
         message.error("Admin removed you");
-
         localStorage.clear();
         navigate("/login");
       }
     });
 
-    // ✅ LISTEN FOR BLOCK EVENT
     socket.on("userBlocked", (userId) => {
       if (userId === storedUser._id) {
         message.error("You are blocked by admin");
-
         localStorage.clear();
         navigate("/login");
       }
     });
 
     return () => {
-      socket.off("userDeleted");
-      socket.off("userBlocked");
+      socket.disconnect();
     };
   }, [navigate]);
 
@@ -57,14 +54,33 @@ const Dashboard = () => {
     navigate("/login");
   };
 
+  // ✅ CONTENT SWITCH (NO ROUTE CHANGE)
+  const renderContent = () => {
+    switch (selectedKey) {
+      case "tasks":
+        return <MyTasks />;
+
+      default:
+        return (
+          <Card title="User Dashboard">
+            <p>
+              <b>Name:</b> {user?.name}
+            </p>
+            <p>
+              <b>Email:</b> {user?.email}
+            </p>
+          </Card>
+        );
+    }
+  };
+
   return (
     <Layout style={{ minHeight: "100vh" }}>
       {/* ✅ SIDEBAR */}
       <UserSidebar selectedKey={selectedKey} setSelectedKey={setSelectedKey} />
 
-      {/* ✅ MAIN LAYOUT */}
       <Layout>
-        {/* HEADER */}
+        {/* ✅ HEADER */}
         <Header
           style={{
             background: "#fff",
@@ -81,18 +97,8 @@ const Dashboard = () => {
           </Button>
         </Header>
 
-        {/* CONTENT */}
-        <Content style={{ margin: 20 }}>
-          <Card title="User Dashboard">
-            <p>
-              <b>Name:</b> {user?.name}
-            </p>
-
-            <p>
-              <b>Email:</b> {user?.email}
-            </p>
-          </Card>
-        </Content>
+        {/* ✅ CONTENT */}
+        <Content style={{ margin: 20 }}>{renderContent()}</Content>
       </Layout>
     </Layout>
   );

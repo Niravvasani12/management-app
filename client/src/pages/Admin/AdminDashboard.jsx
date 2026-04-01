@@ -4,6 +4,9 @@ import Sidebar from "../../components/Layout/Sidebar";
 import Navbar from "../../components/Layout/Navbar";
 import UserManagement from "../Admin/UserManagement/UserManagement";
 
+// ✅ IMPORT THIS
+import TaskManagement from "../Admin/TaskManagement/TaskManagement";
+
 const { Header, Content } = Layout;
 
 const AdminDashboard = () => {
@@ -13,6 +16,10 @@ const AdminDashboard = () => {
     switch (selectedKey) {
       case "users":
         return <UserManagement />;
+
+      case "tasks": // ✅ ADD THIS BLOCK
+        return <TaskManagement />;
+
       default:
         return <h2>Welcome Admin</h2>;
     }
@@ -20,7 +27,7 @@ const AdminDashboard = () => {
 
   return (
     <Layout style={{ minHeight: "100vh" }}>
-      {/* Sidebar Component */}
+      {/* Sidebar */}
       <Sidebar selectedKey={selectedKey} setSelectedKey={setSelectedKey} />
 
       <Layout>
@@ -32,7 +39,6 @@ const AdminDashboard = () => {
             padding: "0 20px",
           }}
         >
-          {/* <h3>Welcome to Management Portal</h3> */}
           <Navbar />
         </Header>
 

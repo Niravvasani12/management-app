@@ -133,7 +133,7 @@ router.put("/unblock/:id", async (req, res) => {
       req.params.id,
       {
         status: "verified",
-        role: role, // 👈 role update bhi
+        role: role,
       },
       { new: true },
     );
