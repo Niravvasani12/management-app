@@ -20,7 +20,7 @@ const CreateTask = () => {
 
   const [form] = Form.useForm();
 
-  // ✅ FETCH USERS
+  //  FETCH USERS
   useEffect(() => {
     // eslint-disable-next-line react-hooks/immutability
     if (userType) fetchUsers();
@@ -38,7 +38,7 @@ const CreateTask = () => {
     }
   };
 
-  // ✅ SUBMIT
+  //  SUBMIT
   const handleSubmit = async (values) => {
     try {
       await axios.post("/tasks/create", {
@@ -59,12 +59,12 @@ const CreateTask = () => {
 
   return (
     <>
-      {/* 🔥 OPEN BUTTON */}
+      {/*  OPEN BUTTON */}
       <Button type="primary" onClick={() => setOpen(true)}>
         + Create Task
       </Button>
 
-      {/* 🔥 MODAL FORM */}
+      {/*  MODAL FORM */}
       <Modal
         title={
           userType

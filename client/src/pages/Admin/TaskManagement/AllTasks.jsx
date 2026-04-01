@@ -6,15 +6,13 @@ const AllTasks = () => {
   const [tasks, setTasks] = useState([]);
   const [loading, setLoading] = useState(false);
 
-  // ✅ FETCH TASKS (SAFE)
+  // FETCH TASKS (SAFE)
   const fetchTasks = async () => {
     setLoading(true);
     try {
       const res = await axios.get("http://localhost:5000/api/tasks/all");
 
-      console.log("TASK API 👉", res.data);
-
-      // 🔥 Ensure array (avoid crash)
+      //  Ensure array (avoid crash)
       const data = Array.isArray(res.data) ? res.data : res.data.tasks || [];
 
       setTasks(data);
@@ -30,13 +28,13 @@ const AllTasks = () => {
     fetchTasks();
   }, []);
 
-  // ✅ DELETE TASK (SAFE)
+  // DELETE TASK (SAFE)
   const deleteTask = async (id) => {
     try {
       await axios.delete(`http://localhost:5000/api/tasks/${id}`);
       message.success("Task Deleted");
 
-      // 🔥 instant UI update (no delay)
+      //  instant UI update (no delay)
       setTasks((prev) => prev.filter((t) => t._id !== id));
     } catch (error) {
       console.error("DELETE ERROR:", error);
@@ -44,7 +42,7 @@ const AllTasks = () => {
     }
   };
 
-  // ✅ STATUS COLOR LOGIC
+  // STATUS COLOR LOGIC
   const getStatusColor = (status) => {
     switch (status) {
       case "pending":
