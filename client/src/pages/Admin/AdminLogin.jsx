@@ -3,19 +3,39 @@ import { Form, Input, Button, Card, message, Typography, Divider } from "antd";
 import { useNavigate, Link } from "react-router-dom";
 
 const { Title, Text } = Typography;
-
+import axios from "../../api/axios";
 const AdminLogin = () => {
   const navigate = useNavigate();
 
-  const onFinish = (values) => {
-    const { email, password } = values;
+  const onFinish = async (values) => {
+    try {
+      const res = await axios.post(
+        "http://localhost:5000/api/auth/login",
+        values,
+      );
 
-    if (email === "adminAavgo@gmail.com" && password === "admin123") {
-      localStorage.setItem("admin", JSON.stringify({ email }));
-      message.success("Login Successful , Admin");
-      navigate("/admin/dashboard");
-    } else {
-      message.error("Invalid Credentials");
+      console.log("LOGIN RESPONSE:", res.data);
+
+      const { token, user } = res.data;
+
+      //  Store data
+      localStorage.setItem("token", token);
+      localStorage.setItem("user", JSON.stringify(user));
+
+      //  FORCE NAVIGATION (no mistake now)
+      if (user.role === "admin") {
+        message.success("Welcome Admin 🚀");
+
+        //  IMPORTANT (delay fix for navigation issue)
+        setTimeout(() => {
+          navigate("/admin/dashboard");
+        }, 500);
+      } else {
+        message.error("Access denied! Not admin");
+      }
+    } catch (error) {
+      console.log("ERROR:", error.response?.data);
+      message.error(error.response?.data?.message || "Login failed");
     }
   };
 

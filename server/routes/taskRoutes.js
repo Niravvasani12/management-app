@@ -7,8 +7,7 @@ import {
   deleteTask,
 } from "../controllers/task.controller.js";
 
-import authMiddleware from "../middleware/authMiddleware.js";
-
+import { protect } from "../middleware/authMiddleware.js";
 const router = express.Router();
 
 // ================= ADMIN =================
@@ -17,7 +16,7 @@ router.get("/all", getAllTasks);
 router.delete("/:id", deleteTask);
 
 // ================= USER =================
-router.get("/my", authMiddleware, getMyTasks);
+router.get("/my", protect, getMyTasks);
 router.put("/:id/status", updateTaskStatus);
 
 export default router;
