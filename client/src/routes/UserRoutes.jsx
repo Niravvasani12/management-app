@@ -6,7 +6,7 @@ import Register from "../pages/User/Register";
 import Dashboard from "../pages/User/Dashboard";
 import MyTasks from "../pages/User/Task/MyTasks";
 
-import { UserPrivateRoute, PublicRoute } from "./ProtectedRoute";
+import { UserPrivateRoute, PublicRoute } from "../routes/ProtectedRoute";
 
 const UserRoutes = () => {
   return (

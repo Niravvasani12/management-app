@@ -6,7 +6,7 @@ import AdminDashboard from "../pages/Admin/AdminDashboard";
 import CreateMasterUser from "../pages/Admin/UserManagement/MasterUsers/CreateMasterUser";
 import CreateHotelUser from "../pages/Admin/UserManagement/HotelUsers/CreateHotelUser";
 
-import { AdminPrivateRoute, PublicRoute } from "./ProtectedRoute";
+import { AdminPrivateRoute, PublicRoute } from "../routes/ProtectedRoute";
 
 const AdminRoutes = () => {
   return (
