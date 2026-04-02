@@ -3,16 +3,9 @@ import User from "../models/User.js";
 // ================== GET ALL USERS ==================
 export const getAllUsers = async (req, res) => {
   try {
-    console.log("✅ GET USERS CALLED");
-
-    // 🔥 REMOVE FILTER (IMPORTANT FIX)
     const users = await User.find().sort({ createdAt: -1 });
-
-    console.log("USERS FOUND:", users.length);
-
     res.status(200).json(users);
   } catch (error) {
-    console.error("❌ GET USERS ERROR:", error);
     res.status(500).json({
       message: "Error fetching users",
       error: error.message,
@@ -25,18 +18,10 @@ export const approveUser = async (req, res) => {
   try {
     const { role } = req.body;
 
-    if (!role) {
-      return res.status(400).json({ message: "Role is required" });
-    }
-
-    if (!["master", "hotel"].includes(role)) {
-      return res.status(400).json({ message: "Invalid role" });
-    }
-
     const user = await User.findByIdAndUpdate(
       req.params.id,
       {
-        status: "verified", // ✅ correct
+        status: "verified",
         role,
       },
       { new: true },
@@ -51,7 +36,6 @@ export const approveUser = async (req, res) => {
       user,
     });
   } catch (error) {
-    console.error("❌ APPROVE ERROR:", error);
     res.status(500).json({ message: "Error approving user" });
   }
 };
@@ -68,6 +52,9 @@ export const blockUser = async (req, res) => {
     if (!user) {
       return res.status(404).json({ message: "User not found" });
     }
+
+    // IMPORTANT (ADD THIS)
+    global.io.emit("userBlocked", user._id.toString());
 
     res.json({
       message: "User blocked successfully",
@@ -87,6 +74,9 @@ export const deleteUser = async (req, res) => {
     if (!user) {
       return res.status(404).json({ message: "User not found" });
     }
+
+    // IMPORTANT (ADD THIS)
+    global.io.emit("userDeleted", user._id.toString());
 
     res.json({ message: "User deleted successfully" });
   } catch (error) {
