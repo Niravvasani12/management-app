@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { Table, Tag, message, Button, Popconfirm } from "antd";
-import axios from "axios";
+import axios from "../../../api/axios";
 
 const AllTasks = () => {
   const [tasks, setTasks] = useState([]);
@@ -10,7 +10,7 @@ const AllTasks = () => {
   const fetchTasks = async () => {
     setLoading(true);
     try {
-      const res = await axios.get("http://localhost:5000/api/tasks/all");
+      const res = await axios.get("/tasks/all");
 
       //  Ensure array (avoid crash)
       const data = Array.isArray(res.data) ? res.data : res.data.tasks || [];
@@ -31,7 +31,7 @@ const AllTasks = () => {
   // DELETE TASK (SAFE)
   const deleteTask = async (id) => {
     try {
-      await axios.delete(`http://localhost:5000/api/tasks/${id}`);
+      await axios.delete(`/tasks/${id}`);
       message.success("Task Deleted");
 
       //  instant UI update (no delay)
