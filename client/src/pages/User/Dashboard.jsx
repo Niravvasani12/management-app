@@ -26,8 +26,7 @@ const Dashboard = () => {
     setUser(storedUser);
 
     // ✅ SOCKET INSIDE EFFECT
-    const socket = io("http://localhost:5000");
-
+    const socket = io("https://management-app-production-4b5b.up.railway.app");
     socket.on("userDeleted", (userId) => {
       if (userId === storedUser._id) {
         message.error("Admin removed you");
