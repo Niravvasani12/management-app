@@ -9,11 +9,7 @@ const AdminLogin = () => {
 
   const onFinish = async (values) => {
     try {
-      const res = await axios.post(
-        "http://localhost:5000/api/auth/login",
-        values,
-      );
-
+      const res = await axios.post("/auth/login", values);
       console.log("LOGIN RESPONSE:", res.data);
 
       const { token, user } = res.data;
