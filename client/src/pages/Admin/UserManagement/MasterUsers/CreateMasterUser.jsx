@@ -29,11 +29,11 @@ const CreateMasterUser = () => {
       <Card title="Create Master User" style={{ width: 400 }}>
         <Form layout="vertical" onFinish={onFinish}>
           <Form.Item name="name" label="Name" rules={[{ required: true }]}>
-            <Input autoFocus />
+            <Input autoFocus placeholder="Enter name" />
           </Form.Item>
 
           <Form.Item name="email" label="Email" rules={[{ required: true }]}>
-            <Input />
+            <Input placeholder="Enter Email Id" />
           </Form.Item>
 
           <Form.Item
@@ -41,7 +41,7 @@ const CreateMasterUser = () => {
             label="Password"
             rules={[{ required: true }]}
           >
-            <Input.Password />
+            <Input.Password placeholder="Enter Password" />
           </Form.Item>
 
           <Form.Item name="mobile" label="Mobile">

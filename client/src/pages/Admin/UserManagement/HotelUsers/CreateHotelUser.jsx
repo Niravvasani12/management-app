@@ -28,7 +28,7 @@ const CreateHotelUser = () => {
       <Card title="Create Hotel User" style={{ width: 400 }}>
         <Form layout="vertical" onFinish={onFinish}>
           <Form.Item name="name" label="Name" rules={[{ required: true }]}>
-            <Input placeholder="Enter name" />
+            <Input placeholder="Enter name" autoFocus />
           </Form.Item>
 
           <Form.Item
