@@ -16,7 +16,6 @@ const MyTasks = () => {
         return;
       }
 
-      // ✅ FIXED URL (NO DOUBLE /api)
       const res = await axios.get("/tasks/my", {
         headers: {
           Authorization: `Bearer ${token}`,
@@ -32,8 +31,14 @@ const MyTasks = () => {
 
   useEffect(() => {
     // eslint-disable-next-line react-hooks/set-state-in-effect
-    fetchTasks();
+    fetchTasks(); // first load
   }, []);
+
+  // CLOSE HANDLER (IMPORTANT)
+  const handleClose = () => {
+    setSelectedTask(null);
+    fetchTasks();
+  };
 
   const columns = [
     {
@@ -74,7 +79,7 @@ const MyTasks = () => {
       {selectedTask && (
         <TaskDetails
           task={selectedTask}
-          onClose={() => setSelectedTask(null)}
+          onClose={handleClose}
           refresh={fetchTasks}
         />
       )}

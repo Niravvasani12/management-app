@@ -22,7 +22,7 @@ const TaskDetails = ({ task, onClose, refresh }) => {
       </p>
 
       {/*  Update Status Component */}
-      <UpdateTaskStatus task={task} refresh={refresh} />
+      <UpdateTaskStatus task={task} refresh={refresh} onClose={onClose} />
     </Modal>
   );
 };

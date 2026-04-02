@@ -21,7 +21,7 @@ const UserManagement = () => {
 
   const getButtonText = () => {
     if (activeTab === "1") return "Master User";
-    if (activeTab === "2") return "Hotel User Create";
+    if (activeTab === "2") return "Hotel User";
     return "";
   };
 
