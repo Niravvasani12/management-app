@@ -1,16 +1,14 @@
 import React from "react";
 import { Select, message } from "antd";
-import axios from "axios";
-
+import axios from "../../../api";
 const { Option } = Select;
 
 const UpdateTaskStatus = ({ task, refresh }) => {
   const updateStatus = async (status) => {
     try {
-      await axios.put(`http://localhost:5000/api/tasks/${task._id}/status`, {
+      await axios.put(`/tasks/${task._id}/status`, {
         status,
       });
-
       message.success("Status Updated");
       refresh();
     } catch {
