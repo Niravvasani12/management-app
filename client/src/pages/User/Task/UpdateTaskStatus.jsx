@@ -1,6 +1,6 @@
 import React from "react";
 import { Select, message } from "antd";
-import axios from "../../../api";
+import axios from "../../../api/axios";
 const { Option } = Select;
 
 const UpdateTaskStatus = ({ task, refresh }) => {
