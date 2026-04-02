@@ -25,10 +25,11 @@ const __dirname = path.dirname(__filename);
 const app = express();
 const server = http.createServer(app);
 
-// ✅ ALLOWED ORIGINS (IMPORTANT)
+//  ALLOWED ORIGINS (IMPORTANT)
 const allowedOrigins = [
   "http://localhost:5173",
   "https://management-app-five-psi.vercel.app",
+  "https://management-9v1pixijh-college-attendances-projects.vercel.app",
 ];
 
 // ================= SOCKET.IO =================
