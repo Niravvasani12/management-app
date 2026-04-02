@@ -2,37 +2,37 @@ import express from "express";
 import dotenv from "dotenv";
 import cors from "cors";
 import connectDB from "./config/db.js";
+import path from "path";
+import { fileURLToPath } from "url";
 
-//  NEW IMPORTS
+// NEW IMPORTS
 import http from "http";
 import { Server } from "socket.io";
 
-//  Routes
+// Routes
 import authRoutes from "./routes/authRoutes.js";
 import userRoutes from "./routes/userRoutes.js";
 import taskRoutes from "./routes/taskRoutes.js";
-//  Load env variables
-dotenv.config();
 
-//  Connect to MongoDB
+// CONFIG
+dotenv.config();
 connectDB();
 
-const app = express();
+// FIX __dirname (IMPORTANT for ES Modules)
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
 
-//  CREATE HTTP SERVER
+// APP INIT
+const app = express();
 const server = http.createServer(app);
 
-//  SOCKET.IO SETUP
+// SOCKET.IO
 const io = new Server(server, {
-  cors: {
-    origin: "*",
-  },
+  cors: { origin: "*" },
 });
 
-//  MAKE IO GLOBAL (VERY IMPORTANT)
 global.io = io;
 
-//  SOCKET CONNECTION
 io.on("connection", (socket) => {
   console.log("User connected:", socket.id);
 
@@ -41,28 +41,33 @@ io.on("connection", (socket) => {
   });
 });
 
-//  Middleware
+// MIDDLEWARE
 app.use(cors());
 app.use(express.json());
 
-//  API Routes
+// API ROUTES (KEEP ABOVE STATIC)
 app.use("/api/auth", authRoutes);
 app.use("/api/users", userRoutes);
 app.use("/api/tasks", taskRoutes);
 
-//  Test Route
-app.get("/", (req, res) => {
-  res.send(" API Running...");
+// ================= FRONTEND SERVING =================
+
+// Absolute path to client/dist
+const distPath = path.join(__dirname, "client", "dist");
+
+// Serve static files
+app.use(express.static(distPath));
+
+// React fallback (for routing)
+app.get("*", (req, res) => {
+  res.sendFile(path.join(distPath, "index.html"));
 });
 
-//  404
-app.use((req, res) => {
-  res.status(404).json({ message: "Route Not Found" });
-});
+// ===================================================
 
-//  Start Server (IMPORTANT CHANGE)
+// SERVER START
 const PORT = process.env.PORT || 5000;
 
 server.listen(PORT, () => {
-  console.log(`Server running on port ${PORT}`);
+  console.log(`🚀 Server running on port ${PORT}`);
 });
