@@ -23,6 +23,9 @@ const MyTasks = () => {
       });
 
       setTasks(res.data);
+
+      //* Save data On LocalStorage after every Auto Refresh */
+      localStorage.setItem("myItems", JSON.stringify(res.data));
     } catch (error) {
       console.error(error);
       message.error("Failed to load tasks");
