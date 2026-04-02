@@ -31,7 +31,9 @@ const MyTasks = () => {
 
   useEffect(() => {
     // eslint-disable-next-line react-hooks/set-state-in-effect
-    fetchTasks(); // first load
+    fetchTasks();
+    const interval = setInterval(fetchTasks, 5000);
+    return () => clearInterval(interval); // first load
   }, []);
 
   // CLOSE HANDLER (IMPORTANT)
