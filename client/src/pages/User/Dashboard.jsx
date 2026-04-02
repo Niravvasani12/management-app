@@ -25,8 +25,8 @@ const Dashboard = () => {
     // eslint-disable-next-line react-hooks/set-state-in-effect
     setUser(storedUser);
 
-    // ✅ SOCKET INSIDE EFFECT
-    const socket = io("https://management-app-production-4b5b.up.railway.app");
+    //  SOCKET INSIDE EFFECT
+    const socket = io(import.meta.env.VITE_SOCKET_URL);
     socket.on("userDeleted", (userId) => {
       if (userId === storedUser._id) {
         message.error("Admin removed you");
@@ -53,7 +53,7 @@ const Dashboard = () => {
     navigate("/login");
   };
 
-  // ✅ CONTENT SWITCH (NO ROUTE CHANGE)
+  //  CONTENT SWITCH (NO ROUTE CHANGE)
   const renderContent = () => {
     switch (selectedKey) {
       case "tasks":
@@ -75,11 +75,11 @@ const Dashboard = () => {
 
   return (
     <Layout style={{ minHeight: "100vh" }}>
-      {/* ✅ SIDEBAR */}
+      {/*  SIDEBAR */}
       <UserSidebar selectedKey={selectedKey} setSelectedKey={setSelectedKey} />
 
       <Layout>
-        {/* ✅ HEADER */}
+        {/*  HEADER */}
         <Header
           style={{
             background: "#fff",
@@ -96,7 +96,7 @@ const Dashboard = () => {
           </Button>
         </Header>
 
-        {/* ✅ CONTENT */}
+        {/*  CONTENT */}
         <Content style={{ margin: 20 }}>{renderContent()}</Content>
       </Layout>
     </Layout>
