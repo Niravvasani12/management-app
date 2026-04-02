@@ -28,7 +28,11 @@ const server = http.createServer(app);
 
 // SOCKET.IO
 const io = new Server(server, {
-  cors: { origin: "*" },
+  cors: {
+    origin: "*",
+    methods: ["GET", "POST"],
+  },
+  transports: ["polling", "websocket"],
 });
 
 global.io = io;

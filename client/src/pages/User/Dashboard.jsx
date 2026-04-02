@@ -10,7 +10,6 @@ const { Header, Content } = Layout;
 
 const Dashboard = () => {
   const navigate = useNavigate();
-
   const [user, setUser] = useState(null);
   const [selectedKey, setSelectedKey] = useState("dashboard");
 
@@ -25,21 +24,47 @@ const Dashboard = () => {
     // eslint-disable-next-line react-hooks/set-state-in-effect
     setUser(storedUser);
 
-    //  SOCKET INSIDE EFFECT
-    const socket = io(import.meta.env.VITE_SOCKET_URL);
+    // FINAL SOCKET FIX (WORKS IN PRODUCTION)
+    const socket = io(import.meta.env.VITE_SOCKET_URL, {
+      transports: ["polling", "websocket"],
+      withCredentials: true,
+    });
+
+    // CONNECT LOG
+    socket.on("connect", () => {
+      console.log("Socket Connected:", socket.id);
+    });
+
+    //  ERROR LOG
+    socket.on("connect_error", (err) => {
+      console.log(" Socket Error:", err.message);
+    });
+
+    //  USER DELETED
     socket.on("userDeleted", (userId) => {
+      console.log(" userDeleted received:", userId);
+
       if (userId === storedUser._id) {
         message.error("Admin removed you");
-        localStorage.clear();
-        navigate("/login");
+
+        setTimeout(() => {
+          localStorage.clear();
+          navigate("/login");
+        }, 1000);
       }
     });
 
+    //  USER BLOCKED
     socket.on("userBlocked", (userId) => {
+      console.log(" userBlocked received:", userId);
+
       if (userId === storedUser._id) {
         message.error("You are blocked by admin");
-        localStorage.clear();
-        navigate("/login");
+
+        setTimeout(() => {
+          localStorage.clear();
+          navigate("/login");
+        }, 1000);
       }
     });
 
@@ -53,7 +78,6 @@ const Dashboard = () => {
     navigate("/login");
   };
 
-  //  CONTENT SWITCH (NO ROUTE CHANGE)
   const renderContent = () => {
     switch (selectedKey) {
       case "tasks":
@@ -75,11 +99,9 @@ const Dashboard = () => {
 
   return (
     <Layout style={{ minHeight: "100vh" }}>
-      {/*  SIDEBAR */}
       <UserSidebar selectedKey={selectedKey} setSelectedKey={setSelectedKey} />
 
       <Layout>
-        {/*  HEADER */}
         <Header
           style={{
             background: "#fff",
@@ -90,13 +112,11 @@ const Dashboard = () => {
           }}
         >
           <h3>Welcome {user?.name}</h3>
-
           <Button danger onClick={logout}>
             Logout
           </Button>
         </Header>
 
-        {/*  CONTENT */}
         <Content style={{ margin: 20 }}>{renderContent()}</Content>
       </Layout>
     </Layout>
