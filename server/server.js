@@ -5,7 +5,6 @@ import connectDB from "./config/db.js";
 import path from "path";
 import { fileURLToPath } from "url";
 
-// NEW IMPORTS
 import http from "http";
 import { Server } from "socket.io";
 
@@ -18,7 +17,7 @@ import taskRoutes from "./routes/taskRoutes.js";
 dotenv.config();
 connectDB();
 
-// FIX __dirname (IMPORTANT for ES Modules)
+// FIX __dirname
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
@@ -26,11 +25,18 @@ const __dirname = path.dirname(__filename);
 const app = express();
 const server = http.createServer(app);
 
-// SOCKET.IO
+// ✅ ALLOWED ORIGINS (IMPORTANT)
+const allowedOrigins = [
+  "http://localhost:5173",
+  "https://management-app-five-psi.vercel.app",
+];
+
+// ================= SOCKET.IO =================
 const io = new Server(server, {
   cors: {
-    origin: "*",
+    origin: allowedOrigins,
     methods: ["GET", "POST"],
+    credentials: true,
   },
   transports: ["polling", "websocket"],
 });
@@ -45,31 +51,31 @@ io.on("connection", (socket) => {
   });
 });
 
-// MIDDLEWARE
-app.use(cors());
+// ================= MIDDLEWARE =================
+app.use(
+  cors({
+    origin: allowedOrigins,
+    credentials: true,
+  }),
+);
+
 app.use(express.json());
 
-// API ROUTES (KEEP ABOVE STATIC)
+// ================= ROUTES =================
 app.use("/api/auth", authRoutes);
 app.use("/api/users", userRoutes);
 app.use("/api/tasks", taskRoutes);
 
-// ================= FRONTEND SERVING =================
-
-// Absolute path to client/dist
+// ================= FRONTEND =================
 const distPath = path.join(__dirname, "client", "dist");
 
-// Serve static files
 app.use(express.static(distPath));
 
-// React fallback (for routing)
 app.get("*", (req, res) => {
   res.sendFile(path.join(distPath, "index.html"));
 });
 
-// ===================================================
-
-// SERVER START
+// ================= SERVER =================
 const PORT = process.env.PORT || 5000;
 
 server.listen(PORT, () => {
