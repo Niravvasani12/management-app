@@ -10,18 +10,18 @@ const PendingStaff = ({ searchText }) => {
   const [selectedUserId, setSelectedUserId] = useState(null);
   const [selectedRole, setSelectedRole] = useState("");
 
-  // ✅ FETCH USERS (FIXED)
+  //  FETCH USERS (FIXED)
   const fetchUsers = async () => {
     try {
       setLoading(true);
 
-      const res = await API.get("/users"); // ✅ correct if baseURL = /api
+      const res = await API.get("/users"); //  correct if baseURL = /api
 
       console.log("USERS 👉", res.data); // 🔥 DEBUG
 
       const users = Array.isArray(res.data) ? res.data : res.data.users || [];
 
-      // ✅ SAFE FILTER (IMPORTANT FIX)
+      //  SAFE FILTER (IMPORTANT FIX)
       const filtered = users.filter(
         (u) => u.status?.toLowerCase() === "pending",
       );
@@ -35,14 +35,14 @@ const PendingStaff = ({ searchText }) => {
     }
   };
 
-  // ✅ AUTO REFRESH
+  //  AUTO REFRESH
   useEffect(() => {
     fetchUsers();
     const interval = setInterval(fetchUsers, 5000);
     return () => clearInterval(interval);
   }, []);
 
-  // ✅ SEARCH FILTER
+  //  SEARCH FILTER
   const filteredData = useMemo(() => {
     if (!searchText) return data;
 
@@ -57,14 +57,14 @@ const PendingStaff = ({ searchText }) => {
     });
   }, [data, searchText]);
 
-  // ✅ OPEN MODAL
+  //  OPEN MODAL
   const openApproveModal = (id) => {
     setSelectedUserId(id);
     setSelectedRole("");
     setIsModalOpen(true);
   };
 
-  // ✅ APPROVE USER
+  //  APPROVE USER
   const handleApprove = async () => {
     if (!selectedRole) {
       return message.warning("Select role first");
@@ -87,7 +87,7 @@ const PendingStaff = ({ searchText }) => {
     }
   };
 
-  // ✅ BLOCK USER
+  //  BLOCK USER
   const handleBlock = async (id) => {
     try {
       await API.put(`/users/block/${id}`);
@@ -99,7 +99,7 @@ const PendingStaff = ({ searchText }) => {
     }
   };
 
-  // ✅ TABLE COLUMNS
+  //  TABLE COLUMNS
   const columns = [
     { title: "ID", render: (_, __, index) => index + 1 },
     { title: "Name", dataIndex: "name" },
