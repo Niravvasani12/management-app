@@ -25,17 +25,36 @@ const __dirname = path.dirname(__filename);
 const app = express();
 const server = http.createServer(app);
 
-//  ALLOWED ORIGINS (IMPORTANT)
-const allowedOrigins = [
-  "http://localhost:5173",
-  "https://management-app-five-psi.vercel.app",
-  "https://management-9v1pixijh-college-attendances-projects.vercel.app",
-];
+// ================= CORS FIX =================
+
+// ✅ Allow localhost + ALL vercel deployments
+const corsOptions = {
+  origin: (origin, callback) => {
+    if (
+      !origin ||
+      origin === "http://localhost:5173" ||
+      origin.includes("vercel.app") // ✅ THIS IS KEY FIX
+    ) {
+      callback(null, true);
+    } else {
+      callback(new Error("CORS blocked"));
+    }
+  },
+  credentials: true,
+  methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
+  allowedHeaders: ["Content-Type", "Authorization"],
+};
+
+// ✅ Apply CORS FIRST
+app.use(cors(corsOptions));
+
+// ✅ Handle preflight requests (VERY IMPORTANT)
+app.options("*", cors(corsOptions));
 
 // ================= SOCKET.IO =================
 const io = new Server(server, {
   cors: {
-    origin: allowedOrigins,
+    origin: "*", // or use same logic if needed
     methods: ["GET", "POST"],
     credentials: true,
   },
@@ -53,13 +72,6 @@ io.on("connection", (socket) => {
 });
 
 // ================= MIDDLEWARE =================
-app.use(
-  cors({
-    origin: allowedOrigins,
-    credentials: true,
-  }),
-);
-
 app.use(express.json());
 
 // ================= ROUTES =================
@@ -80,5 +92,5 @@ app.get("*", (req, res) => {
 const PORT = process.env.PORT || 5000;
 
 server.listen(PORT, () => {
-  console.log(`🚀 Server running on port ${PORT}`);
+  console.log(` Server running on port ${PORT}`);
 });
