@@ -1,8 +1,8 @@
 import React from "react";
 import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 
-import UserRoutes from "./routes/UserRoutes";
-import AdminRoutes from "./routes/AdminRoutes";
+import UserRoutes from "../src/routes/UserRoutes";
+import AdminRoutes from "../src/routes/AdminRoutes";
 
 function App() {
   return (
