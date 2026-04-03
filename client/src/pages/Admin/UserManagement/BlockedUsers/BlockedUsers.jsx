@@ -83,22 +83,23 @@ const BlockedUsers = ({ searchText }) => {
 
   //** TABLE COLUMNS
   const columns = [
-    { title: "ID", render: (_, __, index) => index + 1 },
-    { title: "Name", dataIndex: "name" },
-    { title: "Email", dataIndex: "email" },
-    { title: "Mobile", dataIndex: "mobile" },
+    { title: "ID", width: 80, render: (_, __, index) => index + 1 },
+    { title: "Name", dataIndex: "name", width: 150 },
+    { title: "Email", dataIndex: "email", width: 220 },
+    { title: "Mobile", dataIndex: "mobile", width: 150 },
     {
       title: "Last Updated",
+      width: 180,
       render: (_, record) => new Date(record.updatedAt).toLocaleDateString(),
     },
     {
       title: "Action",
+      width: 220,
       render: (_, record) => (
         <Space>
           <Button type="primary" onClick={() => openUnblockModal(record)}>
             Unblock
           </Button>
-
           <Popconfirm
             title="Delete user?"
             onConfirm={() => handleDelete(record._id)}
@@ -119,6 +120,7 @@ const BlockedUsers = ({ searchText }) => {
         rowKey="_id"
         loading={loading}
         pagination={{ pageSize: 5 }}
+        scroll={{ x: "max-content" }} //** ADD THIS
       />
 
       {/* UNBLOCK MODAL */}

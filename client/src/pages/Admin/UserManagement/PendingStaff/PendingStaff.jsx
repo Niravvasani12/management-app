@@ -101,16 +101,14 @@ const PendingStaff = ({ searchText }) => {
 
   //  TABLE COLUMNS
   const columns = [
-    { title: "ID", render: (_, __, index) => index + 1 },
-    { title: "Name", dataIndex: "name" },
-    { title: "Email", dataIndex: "email" },
-    { title: "Mobile", dataIndex: "mobile" },
-    {
-      title: "Status",
-      dataIndex: "status",
-    },
+    { title: "ID", width: 80, render: (_, __, index) => index + 1 },
+    { title: "Name", dataIndex: "name", width: 150 },
+    { title: "Email", dataIndex: "email", width: 220 },
+    { title: "Mobile", dataIndex: "mobile", width: 150 },
+    { title: "Status", dataIndex: "status", width: 120 },
     {
       title: "Last Updated",
+      width: 180,
       render: (_, record) =>
         record.updatedAt
           ? new Date(record.updatedAt).toLocaleDateString()
@@ -118,12 +116,12 @@ const PendingStaff = ({ searchText }) => {
     },
     {
       title: "Action",
+      width: 220,
       render: (_, record) => (
         <Space>
           <Button type="primary" onClick={() => openApproveModal(record._id)}>
             Approve
           </Button>
-
           <Button danger onClick={() => handleBlock(record._id)}>
             Block
           </Button>
@@ -141,6 +139,7 @@ const PendingStaff = ({ searchText }) => {
         rowKey="_id"
         loading={loading}
         pagination={{ pageSize: 5 }}
+        scroll={{ x: "max-content" }} // ** ADD THIS
       />
 
       {/* APPROVE MODAL */}
