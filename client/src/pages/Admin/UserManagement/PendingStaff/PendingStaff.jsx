@@ -131,7 +131,7 @@ const PendingStaff = ({ searchText }) => {
   ];
 
   return (
-    <>
+    <div div style={{ overflowX: "auto", border: "#a0a0a065" }}>
       {/* TABLE */}
       <Table
         columns={columns}
@@ -163,7 +163,7 @@ const PendingStaff = ({ searchText }) => {
           <Select.Option value="hotel">Hotel User</Select.Option>
         </Select>
       </Modal>
-    </>
+    </div>
   );
 };
 
