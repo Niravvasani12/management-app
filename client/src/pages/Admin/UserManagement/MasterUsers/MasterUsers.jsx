@@ -126,26 +126,24 @@ const MasterUsers = ({ searchText }) => {
 
   //** TABLE COLUMNS
   const columns = [
-    { title: "ID", render: (_, __, index) => index + 1 },
-    { title: "Name", dataIndex: "name" },
-    { title: "Email", dataIndex: "email" },
-    { title: "Mobile", dataIndex: "mobile" },
-    {
-      title: "Status",
-      dataIndex: "status",
-    },
+    { title: "ID", width: 80, render: (_, __, index) => index + 1 },
+    { title: "Name", dataIndex: "name", width: 150 },
+    { title: "Email", dataIndex: "email", width: 200 },
+    { title: "Mobile", dataIndex: "mobile", width: 150 },
+    { title: "Status", dataIndex: "status", width: 120 },
     {
       title: "Last Updated",
+      width: 180,
       render: (_, record) => new Date(record.updatedAt).toLocaleDateString(),
     },
     {
       title: "Action",
+      width: 180,
       render: (_, record) => (
         <Space>
           <Button icon={<EditOutlined />} onClick={() => openEditModal(record)}>
             Edit
           </Button>
-
           <Popconfirm
             title="Delete user?"
             onConfirm={() => handleDelete(record._id)}
@@ -158,13 +156,14 @@ const MasterUsers = ({ searchText }) => {
   ];
 
   return (
-    <div>
+    <div style={{ overflowX: "auto" }}>
       {/*** TABLE */}
       <Table
         columns={columns}
         dataSource={filteredData} //** IMPORTANT
         rowKey="_id"
         loading={loading}
+        scroll={{ x: 1000 }} // or any width
       />
 
       {/*** CREATE MODAL */}
