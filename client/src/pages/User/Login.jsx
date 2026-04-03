@@ -60,6 +60,8 @@ const Login = () => {
       >
         <Title style={{ marginBottom: 0 }}>Management App</Title>
         <Text>Welcome to your system</Text>
+        <br />
+        <h6>-Nirav vasani</h6>
       </div>
 
       {/* RIGHT */}

@@ -49,6 +49,8 @@ const AdminLogin = () => {
       >
         <Title style={{ marginBottom: 0 }}>Admin Panel</Title>
         <Text>Manage your system securely</Text>
+        <br />
+        <h6>-Nirav vasani</h6>
       </div>
 
       {/* RIGHT SIDE */}
