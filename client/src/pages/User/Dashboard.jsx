@@ -16,7 +16,8 @@ const Dashboard = () => {
   useEffect(() => {
     const storedUser = JSON.parse(localStorage.getItem("user"));
 
-    if (!storedUser) {
+    // FIX 1: role check added
+    if (!storedUser || storedUser.role !== "user") {
       navigate("/login");
       return;
     }
@@ -24,51 +25,34 @@ const Dashboard = () => {
     // eslint-disable-next-line react-hooks/set-state-in-effect
     setUser(storedUser);
 
-    // FINAL SOCKET FIX (WORKS IN PRODUCTION)
+    // FIX 2: better socket config
     const socket = io(import.meta.env.VITE_SOCKET_URL, {
-      transports: ["polling", "websocket"],
+      transports: ["websocket"], // cleaner than polling
       withCredentials: true,
     });
 
-    // CONNECT LOG
-    socket.on("connect", () => {
-      console.log("Socket Connected:", socket.id);
-    });
-
-    //  ERROR LOG
-    socket.on("connect_error", (err) => {
-      console.log(" Socket Error:", err.message);
-    });
-
-    //  USER DELETED
+    // USER DELETED
     socket.on("userDeleted", (userId) => {
-      console.log(" userDeleted received:", userId);
-
       if (userId === storedUser._id) {
         message.error("Admin removed you");
-
-        setTimeout(() => {
-          localStorage.clear();
-          navigate("/login");
-        }, 1000);
+        localStorage.clear();
+        navigate("/login");
       }
     });
 
-    //  USER BLOCKED
+    // USER BLOCKED
     socket.on("userBlocked", (userId) => {
-      console.log(" userBlocked received:", userId);
-
       if (userId === storedUser._id) {
         message.error("You are blocked by admin");
-
-        setTimeout(() => {
-          localStorage.clear();
-          navigate("/login");
-        }, 1000);
+        localStorage.clear();
+        navigate("/login");
       }
     });
 
+    // FIX 3: cleanup
     return () => {
+      socket.off("userDeleted");
+      socket.off("userBlocked");
       socket.disconnect();
     };
   }, [navigate]);
@@ -86,12 +70,8 @@ const Dashboard = () => {
       default:
         return (
           <Card title="User Dashboard">
-            <p>
-              <b>Name:</b> {user?.name}
-            </p>
-            <p>
-              <b>Email:</b> {user?.email}
-            </p>
+            <p>Name: {user?.name}</p>
+            <p>Email: {user?.email}</p>
           </Card>
         );
     }

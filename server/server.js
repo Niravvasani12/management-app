@@ -25,18 +25,24 @@ const __dirname = path.dirname(__filename);
 const app = express();
 const server = http.createServer(app);
 
-// ================= CORS FIX =================
+// ================= CORS CONFIG =================
+const allowedOrigins = [
+  "http://localhost:5173",
+  "https://management-app-five-psi.vercel.app",
+];
 
-// ✅ Allow localhost + ALL vercel deployments
 const corsOptions = {
   origin: (origin, callback) => {
+    console.log("Request from:", origin);
+
     if (
-      !origin ||
-      origin === "http://localhost:5173" ||
-      origin.includes("vercel.app") // ✅ THIS IS KEY FIX
+      !origin || // allow Postman / mobile apps
+      allowedOrigins.includes(origin) ||
+      origin.endsWith("vercel.app") // allow all vercel deployments safely
     ) {
       callback(null, true);
     } else {
+      console.log("❌ CORS Blocked:", origin);
       callback(new Error("CORS blocked"));
     }
   },
@@ -45,29 +51,23 @@ const corsOptions = {
   allowedHeaders: ["Content-Type", "Authorization"],
 };
 
-// ✅ Apply CORS FIRST
+// APPLY CORS
 app.use(cors(corsOptions));
-
-// ✅ Handle preflight requests (VERY IMPORTANT)
 app.options("*", cors(corsOptions));
 
 // ================= SOCKET.IO =================
 const io = new Server(server, {
-  cors: {
-    origin: "*", // or use same logic if needed
-    methods: ["GET", "POST"],
-    credentials: true,
-  },
-  transports: ["polling", "websocket"],
+  cors: corsOptions,
+  transports: ["websocket", "polling"],
 });
 
 global.io = io;
 
 io.on("connection", (socket) => {
-  console.log("User connected:", socket.id);
+  console.log(" User connected:", socket.id);
 
   socket.on("disconnect", () => {
-    console.log("User disconnected:", socket.id);
+    console.log(" User disconnected:", socket.id);
   });
 });
 
