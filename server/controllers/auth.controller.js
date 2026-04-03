@@ -1,5 +1,5 @@
 import User from "../models/User.js";
-import Admin from "../models/Admin.js"; // ✅ ADD THIS
+import Admin from "../models/Admin.js"; //  ADD THIS
 import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
 
@@ -89,7 +89,7 @@ export const loginUser = async (req, res) => {
     const token = jwt.sign(
       {
         id: user._id,
-        role: role, // ✅ dynamic role
+        role: role, //  dynamic role
       },
       process.env.JWT_SECRET,
       { expiresIn: "1d" },

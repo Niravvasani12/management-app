@@ -6,20 +6,20 @@ export const protect = async (req, res, next) => {
   try {
     let token = req.headers.authorization;
 
-    // ❌ No token
+    //  No token
     if (!token) {
       return res.status(401).json({ message: "No token provided" });
     }
 
-    // ✅ Remove Bearer
+    //  Remove Bearer
     if (token.startsWith("Bearer ")) {
       token = token.split(" ")[1];
     }
 
-    // ✅ Verify token
+    // Verify token
     const decoded = jwt.verify(token, process.env.JWT_SECRET);
 
-    // ✅ Attach user (full user + role)
+    //  Attach user (full user + role)
     const user = await User.findById(decoded.id).select("-password");
 
     if (!user) {

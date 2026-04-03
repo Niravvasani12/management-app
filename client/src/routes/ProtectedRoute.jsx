@@ -4,8 +4,17 @@ import { Navigate } from "react-router-dom";
 // ================= USER PROTECT =================
 export const UserPrivateRoute = ({ children }) => {
   const token = localStorage.getItem("token");
+  const user = JSON.parse(localStorage.getItem("user"));
 
-  return token ? children : <Navigate to="/login" replace />;
+  if (!token) {
+    return <Navigate to="/login" replace />;
+  }
+
+  if (user?.role !== "user") {
+    return <Navigate to="/admin/dashboard" replace />;
+  }
+
+  return children;
 };
 
 // ================= ADMIN PROTECT =================
