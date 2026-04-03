@@ -131,7 +131,7 @@ const PendingStaff = ({ searchText }) => {
   ];
 
   return (
-    <div div style={{ overflowX: "auto", border: "#a0a0a065" }}>
+    <div style={{ overflowX: "auto" }}>
       {/* TABLE */}
       <Table
         columns={columns}
