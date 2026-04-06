@@ -48,6 +48,7 @@ const HotelUsers = ({ searchText }) => {
   useEffect(() => {
     fetchUsers();
     const interval = setInterval(fetchUsers, 5000);
+    //Fetch User For Every 5 Second.
     return () => clearInterval(interval);
   }, []);
 

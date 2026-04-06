@@ -17,7 +17,7 @@ const PendingStaff = ({ searchText }) => {
 
       const res = await API.get("/users"); //  correct if baseURL = /api
 
-      console.log("USERS 👉", res.data); // 🔥 DEBUG
+      console.log("USERS ", res.data); //  DEBUG
 
       const users = Array.isArray(res.data) ? res.data : res.data.users || [];
 
