@@ -11,14 +11,18 @@ function App() {
         {/* Default */}
         <Route path="/" element={<Navigate to="/login" />} />
 
-        {/* User Routes */}
         {UserRoutes()}
 
         {/* Admin Routes */}
         {AdminRoutes()}
 
         {/* 404 */}
-        <Route path="*" element={<h1>404 Page Not Found</h1>} />
+        <Route
+          path="*"
+          element={
+            <h1>404 Page Not Found . Piche Chalaja. Idhar Kuch nahi hey.</h1>
+          }
+        />
       </Routes>
     </BrowserRouter>
   );

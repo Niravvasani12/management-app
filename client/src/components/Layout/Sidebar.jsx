@@ -14,14 +14,14 @@ const Sidebar = ({ selectedKey, setSelectedKey }) => {
   const [collapsed, setCollapsed] = useState(false);
 
   return (
-    <div style={{ position: "relative" }}>
+    <>
       {/* Toggle Button */}
       <div
         onClick={() => setCollapsed(!collapsed)}
         style={{
-          position: "absolute",
+          position: "fixed", // ✅ FIXED
           top: 20,
-          right: -15,
+          left: collapsed ? 80 : 220, // ✅ adjust with sidebar width
           zIndex: 1000,
           width: 40,
           height: 40,
@@ -33,6 +33,7 @@ const Sidebar = ({ selectedKey, setSelectedKey }) => {
           cursor: "pointer",
           color: "#fff",
           boxShadow: "0 2px 8px rgba(0,0,0,0.3)",
+          transition: "0.3s",
         }}
       >
         {collapsed ? <ArrowRightOutlined /> : <ArrowLeftOutlined />}
@@ -69,7 +70,7 @@ const Sidebar = ({ selectedKey, setSelectedKey }) => {
               label: "User Management",
             },
             {
-              key: "tasks", // ✅ FIXED
+              key: "tasks",
               icon: <UnorderedListOutlined />,
               label: "Task Management",
             },
@@ -81,7 +82,7 @@ const Sidebar = ({ selectedKey, setSelectedKey }) => {
           ]}
         />
       </Sider>
-    </div>
+    </>
   );
 };
 

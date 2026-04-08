@@ -26,23 +26,40 @@ const UserManagement = () => {
   };
 
   return (
-    <div style={{ background: "#fff", padding: 20 }}>
+    <div
+      style={{
+        background: "#fff",
+        padding: 20,
+        borderRadius: 8,
+        width: "100%",
+      }}
+    >
       <div
         style={{
           display: "flex",
           justifyContent: "space-between",
+          alignItems: "center",
+          flexWrap: "wrap", // ✅ important
+          gap: 10,
           marginBottom: 20,
         }}
       >
         <h2>User Management</h2>
 
-        <div style={{ display: "flex", gap: 10 }}>
+        <div
+          style={{
+            display: "flex",
+            gap: 10,
+            flexWrap: "wrap", // ✅ prevents overflow
+          }}
+        >
+          {" "}
           <Search
             placeholder="Search user"
             allowClear
             enterButton
             autoFocus
-            style={{ width: 250, height: 33 }}
+            style={{ width: "100%", maxWidth: 250 }}
             value={searchText}
             onChange={(e) => setSearchText(e.target.value)}
             onSearch={(value) => setSearchValue(value)}

@@ -26,6 +26,8 @@ const app = express();
 const server = http.createServer(app);
 
 // ================= CORS CONFIG =================
+
+// Connect Frontend
 const allowedOrigins = [
   "http://localhost:5173",
   "https://management-app-five-psi.vercel.app",
