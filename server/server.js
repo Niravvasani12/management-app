@@ -13,21 +13,19 @@ import authRoutes from "./routes/authRoutes.js";
 import userRoutes from "./routes/userRoutes.js";
 import taskRoutes from "./routes/taskRoutes.js";
 
-// CONFIG
+// ================= CONFIG =================
 dotenv.config();
 connectDB();
 
-// FIX __dirname
+// Fix __dirname
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
-// APP INIT
+// ================= APP INIT =================
 const app = express();
 const server = http.createServer(app);
 
 // ================= CORS CONFIG =================
-
-// Connect Frontend
 const allowedOrigins = [
   "http://localhost:5173",
   "https://management-app-five-psi.vercel.app",
@@ -38,9 +36,9 @@ const corsOptions = {
     console.log("Request from:", origin);
 
     if (
-      !origin || // allow Postman / mobile apps
+      !origin || // Postman / mobile
       allowedOrigins.includes(origin) ||
-      origin.endsWith("vercel.app") // allow all vercel deployments safely
+      origin.endsWith("vercel.app")
     ) {
       callback(null, true);
     } else {
@@ -53,7 +51,7 @@ const corsOptions = {
   allowedHeaders: ["Content-Type", "Authorization"],
 };
 
-// APPLY CORS
+// Apply CORS
 app.use(cors(corsOptions));
 app.options("*", cors(corsOptions));
 
@@ -66,10 +64,10 @@ const io = new Server(server, {
 global.io = io;
 
 io.on("connection", (socket) => {
-  console.log(" User connected:", socket.id);
+  console.log("🔥 User connected:", socket.id);
 
   socket.on("disconnect", () => {
-    console.log(" User disconnected:", socket.id);
+    console.log("❌ User disconnected:", socket.id);
   });
 });
 
@@ -81,12 +79,23 @@ app.use("/api/auth", authRoutes);
 app.use("/api/users", userRoutes);
 app.use("/api/tasks", taskRoutes);
 
+// ================= HEALTH CHECK =================
+app.get("/api", (req, res) => {
+  res.json({ message: "API is running 🚀" });
+});
+
 // ================= FRONTEND =================
 const distPath = path.join(__dirname, "client", "dist");
 
+// Serve static files
 app.use(express.static(distPath));
 
+// IMPORTANT FIX 👇
+// Only send React app for NON-API routes
 app.get("*", (req, res) => {
+  if (req.originalUrl.startsWith("/api")) {
+    return res.status(404).json({ message: "API route not found" });
+  }
   res.sendFile(path.join(distPath, "index.html"));
 });
 
@@ -94,5 +103,5 @@ app.get("*", (req, res) => {
 const PORT = process.env.PORT || 5000;
 
 server.listen(PORT, () => {
-  console.log(` Server running on port ${PORT}`);
+  console.log(`🚀 Server running on port ${PORT}`);
 });
