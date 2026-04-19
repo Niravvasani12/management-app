@@ -15,9 +15,9 @@ import taskRoutes from "./routes/taskRoutes.js";
 
 // ================= CONFIG =================
 dotenv.config();
-connectDB();
+await connectDB();
 
-// Fix __dirname
+// Fix __dirname (ESM)
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
@@ -26,19 +26,15 @@ const app = express();
 const server = http.createServer(app);
 
 // ================= CORS CONFIG =================
-const allowedOrigins = [
-  "http://localhost:5173",
-  "https://management-app-five-psi.vercel.app",
-];
-
 const corsOptions = {
   origin: (origin, callback) => {
     console.log("Request from:", origin);
 
+    // allow local, vercel, and tools like Postman
     if (
-      !origin || // Postman / mobile
-      allowedOrigins.includes(origin) ||
-      origin.endsWith("vercel.app")
+      !origin ||
+      origin.includes("localhost") ||
+      origin.includes("vercel.app")
     ) {
       callback(null, true);
     } else {
@@ -47,8 +43,6 @@ const corsOptions = {
     }
   },
   credentials: true,
-  methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
-  allowedHeaders: ["Content-Type", "Authorization"],
 };
 
 // Apply CORS
@@ -84,20 +78,20 @@ app.get("/api", (req, res) => {
   res.json({ message: "API is running 🚀" });
 });
 
-// ================= FRONTEND =================
-const distPath = path.join(__dirname, "client", "dist");
+// ================= FRONTEND (ONLY IF BUILT) =================
+// ⚠️ This runs ONLY if you actually deploy frontend inside backend
+if (process.env.NODE_ENV === "production") {
+  const distPath = path.join(__dirname, "client", "dist");
 
-// Serve static files
-app.use(express.static(distPath));
+  app.use(express.static(distPath));
 
-// IMPORTANT FIX 👇
-// Only send React app for NON-API routes
-app.get("*", (req, res) => {
-  if (req.originalUrl.startsWith("/api")) {
-    return res.status(404).json({ message: "API route not found" });
-  }
-  res.sendFile(path.join(distPath, "index.html"));
-});
+  app.get("*", (req, res) => {
+    if (req.originalUrl.startsWith("/api")) {
+      return res.status(404).json({ message: "API route not found" });
+    }
+    res.sendFile(path.join(distPath, "index.html"));
+  });
+}
 
 // ================= SERVER =================
 const PORT = process.env.PORT || 5000;
